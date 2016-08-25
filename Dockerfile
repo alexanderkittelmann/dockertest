@@ -42,4 +42,4 @@ ENV JENKINS_HOME=/var/jenkins_home
 
 EXPOSE 5432
 
-CMD "sudo /var/jenkins_home/customization/execute.sh"
+CMD "sudo sh /var/jenkins_home/customization/execute.sh"
