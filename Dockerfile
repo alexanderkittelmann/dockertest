@@ -30,9 +30,13 @@ RUN  mkdir /usr/local/maven3 \
   && wget http://mirror.serversupportforum.de/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
   && tar -xvzf apache-maven-3.3.9-bin.tar.gz \
   && rm apache-maven-3.3.9-bin.tar.gz
+  
 
 RUN  cd /var/jenkins_home/ \
    && wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
+   
+
+RUN  chmod +x /var/jenkins_home/customization/execute.sh
 
 ENV JAVA_HOME=/usr/local/java/jdk1.8.0_77
 ENV PATH=$PATH:/usr/local/java/jdk1.8.0_77/bin
@@ -42,4 +46,4 @@ ENV JENKINS_HOME=/var/jenkins_home
 
 EXPOSE 5432
 
-CMD "chmod +x execute.sh && /var/jenkins_home/customization/execute.sh"
+CMD "chmod +x /var/jenkins_home/customization/execute.sh && /var/jenkins_home/customization/execute.sh"
