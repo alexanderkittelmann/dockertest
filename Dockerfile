@@ -13,6 +13,9 @@ COPY hudson.plugins.git.GitTool.xml /var/jenkins_home/
 RUN  apt-get update \
   && apt-get install -y wget \
   && rm -rf /var/lib/apt/lists/*
+  
+RUN  apt-get update \
+     && apt-get install -y curl 
 
 RUN  mkdir /usr/local/java \
   && cd /usr/local/java  \
