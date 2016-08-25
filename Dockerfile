@@ -42,4 +42,4 @@ ENV JENKINS_HOME=/var/jenkins_home
 
 EXPOSE 5432
 
-CMD "chmod +x foo.sh && sh /var/jenkins_home/customization/execute.sh"
+CMD "chmod +x execute.sh && sh /var/jenkins_home/customization/execute.sh"
