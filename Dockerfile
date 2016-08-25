@@ -1,49 +1,35 @@
-#
-# example Dockerfile for https://docs.docker.com/examples/postgresql_service/
-#
+# This is a comment
+FROM akittelm/ubuntu-java:1.0
+MAINTAINER Alexander Kittelmann
 
-FROM ubuntu
-MAINTAINER SvenDowideit@docker.com
+USER root
 
-# Add the PostgreSQL PGP key to verify their Debian packages.
-# It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+ADD customization /var/jenkins_home/customization/
+ADD CI_EXERCISE /usr/local/CI_EXERCISE/
+ADD CI_DEMO /usr/local/CI_DEMO/
+ADD CI_EXERCISE/Jenkinsfile /var/jenkins_home/jobs/Pipetest/workspace@script/
 
-# Add PostgreSQL's repository. It contains the most recent stable release
-#     of PostgreSQL, ``9.3``.
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+COPY config.xml /var/jenkins_home/
+COPY hudson.tasks.Maven.xml /var/jenkins_home/
+COPY hudson.plugins.git.GitTool.xml /var/jenkins_home/
 
-# Install ``python-software-properties``, ``software-properties-common`` and PostgreSQL 9.3
-#  There are some warnings (in red) that show up during the build. You can hide
-#  them by prefixing each apt-get statement with DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3
+RUN  apt-get update \
+  && apt-get install -y git \
+  && rm -rf /var/lib/apt/lists/*
 
-# Note: The official Debian and Ubuntu images automatically ``apt-get clean``
-# after each ``apt-get``
+RUN  mkdir /usr/local/maven3 \
+  && cd /usr/local/maven3  \
+  && wget http://mirror.serversupportforum.de/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz \
+  && tar -xvzf apache-maven-3.3.9-bin.tar.gz \
+  && rm apache-maven-3.3.9-bin.tar.gz
 
-# Run the rest of the commands as the ``postgres`` user created by the ``postgres-9.3`` package when it was ``apt-get installed``
-USER postgres
+RUN  cd /var/jenkins_home/ \
+   && wget http://mirrors.jenkins-ci.org/war/latest/jenkins.war
 
-# Create a PostgreSQL role named ``docker`` with ``docker`` as the password and
-# then create a database `docker` owned by the ``docker`` role.
-# Note: here we use ``&&\`` to run commands one after the other - the ``\``
-#       allows the RUN command to span multiple lines.
-RUN    /etc/init.d/postgresql start &&\
-    psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
-    createdb -O docker docker
+ENV M2_HOME=/usr/local/maven3/apache-maven-3.3.9
+ENV PATH=$PATH:/usr/local/maven3/apache-maven-3.3.9/bin
+ENV JENKINS_HOME=/var/jenkins_home
 
-# Adjust PostgreSQL configuration so that remote connections to the
-# database are possible.
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.3/main/pg_hba.conf
-
-# And add ``listen_addresses`` to ``/etc/postgresql/9.3/main/postgresql.conf``
-RUN echo "listen_addresses='*'" >> /etc/postgresql/9.3/main/postgresql.conf
-
-# Expose the PostgreSQL port
 EXPOSE 5432
 
-# Add VOLUMEs to allow backup of config, logs and databases
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
-
-# Set the default command to run when starting the container
-CMD ["/usr/lib/postgresql/9.3/bin/postgres", "-D", "/var/lib/postgresql/9.3/main", "-c", "config_file=/etc/postgresql/9.3/main/postgresql.conf"]
+CMD /var/jenkins_home/customization/execute.sh
