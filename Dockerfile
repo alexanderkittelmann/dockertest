@@ -5,9 +5,6 @@ MAINTAINER Alexander Kittelmann
 USER root
 
 ADD customization /var/jenkins_home/customization/
-ADD CI_EXERCISE /usr/local/CI_EXERCISE/
-ADD CI_DEMO /usr/local/CI_DEMO/
-ADD CI_EXERCISE/Jenkinsfile /var/jenkins_home/jobs/Pipetest/workspace@script/
 
 COPY config.xml /var/jenkins_home/
 COPY hudson.tasks.Maven.xml /var/jenkins_home/
