@@ -14,7 +14,7 @@
   <jdks>
     <jdk>
       <name>JDK8</name>
-      <home>/usr/local/java/jdk1.8.0_77</home>
+      <home>/var/jenkins/java/jdk1.8.0_77</home>
       <properties/>
     </jdk>
   </jdks>

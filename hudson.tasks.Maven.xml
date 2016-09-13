@@ -3,7 +3,7 @@
   <installations>
     <hudson.tasks.Maven_-MavenInstallation>
       <name>M3</name>
-      <home>/usr/local/maven3/apache-maven-3.3.9</home>
+      <home>/var/jenkins/maven3/apache-maven-3.3.9</home>
       <properties/>
     </hudson.tasks.Maven_-MavenInstallation>
   </installations>
