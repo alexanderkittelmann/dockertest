@@ -1,7 +1,6 @@
 #!/bin/bash
 
-JENKINS_SH=/usr/local/bin/jenkins.sh
-JENKINS_HOME=/var/jenkins_home
+JENKINS_HOME=/var/jenkins/jenkins_home
 JENKINS_CLI=$JENKINS_HOME/war/WEB-INF/jenkins-cli.jar
 
 function wait_for_jenkins() {
@@ -11,7 +10,7 @@ function wait_for_jenkins() {
 }
 
 echo "=> Starting Jenkins"
-cd /var/jenkins_home/
+cd /var/jenkins/jenkins_home/
 java -jar jenkins.war --httpPort=5432 --ajp13Port=-1 > /dev/null &
 
 echo "=> Waiting for the server to boot"
