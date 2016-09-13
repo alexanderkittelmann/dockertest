@@ -8,7 +8,7 @@ ADD customization /var/jenkins/jenkins_home/customization/
 
 COPY config.xml /var/jenkins/jenkins_home/
 COPY hudson.tasks.Maven.xml /var/jenkins/jenkins_home/
-COPY hudson.plugins.git.GitTool.xml /var/jenkins_home/
+COPY hudson.plugins.git.GitTool.xml /var/jenkins/jenkins_home/
 
 RUN  apt-get update \
   && apt-get install -y wget \
